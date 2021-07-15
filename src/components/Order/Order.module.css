@@ -1,0 +1,14 @@
+.Order{
+    width:80%;
+    border:solid 1px #eeee;
+    box-shadow:0 2px 3px #ccc;
+    padding: 10px;
+    margin: 10px auto;
+    box-sizing:border-box;
+}
+
+.Order p span.Ingredient{
+    border: solid 1px #eee;
+    padding:5px;
+    margin:0 5px;
+}

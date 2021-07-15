@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+/Burger App Components Diagram.mindnode
+Burger builder Diagram.png
 
 # testing
 /coverage

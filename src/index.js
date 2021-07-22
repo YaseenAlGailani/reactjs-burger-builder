@@ -6,15 +6,12 @@ import reducer from './store/reducers/burgerBuilder';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import thunk from 'redux-thunk';
 
 const preloadedState = {
-  ingredients: {
-    cheese: 0,
-    meat: 0,
-    salad: 0,
-    mushroom: 0
-  },
-  totalPrice: 4
+  ingredients: {},
+  totalPrice: 4, 
+  error:false
 }
 
 const logger = (storeAPI)=>(next)=>(action)=>{
@@ -23,9 +20,9 @@ const logger = (storeAPI)=>(next)=>(action)=>{
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const middlewareEnhancer = applyMiddleware(logger);
+const middlewareEnhancer = applyMiddleware(logger, thunk);
 
-console.log('type of middlewareEnhancer: ',typeof(middlewareEnhancer))
+
 
 const store = createStore(reducer, preloadedState, composeEnhancers(middlewareEnhancer));
 

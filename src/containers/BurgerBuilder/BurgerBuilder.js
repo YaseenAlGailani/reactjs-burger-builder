@@ -17,8 +17,7 @@ class BurgerBuilder extends React.Component {
         super(props);
         
         this.state = {
-            purchasable: false,
-            error: false
+            purchasable: false, 
         }
     }
 
@@ -85,7 +84,7 @@ class BurgerBuilder extends React.Component {
 
         return (
             <>
-                {this.state.error ? <p>Error loading ingredients</p> : burger}
+                {this.props.error ? <p>Error loading ingredients</p> : burger}
                 <Modal modalShown={this.state.viewOrderSummary} hideModal={this.hideOrderSummary} >
                     {modalContent}
                 </Modal>
@@ -94,13 +93,14 @@ class BurgerBuilder extends React.Component {
     }
 
     componentDidMount() {
-        axiosOrder.get('/ingredients.json')
-            .then((resp) => {
-                this.setState({ ingredients: resp.data });
-            }).catch((error) => {
-                this.setState({ error: true });
-                console.log(error);
-            })
+        // axiosOrder.get('/ingredients.json')
+        //     .then((resp) => {
+        //         this.setState({ ingredients: resp.data });
+        //     }).catch((error) => {
+        //         this.setState({ error: true });
+        //         console.log(error);
+        //     })
+        this.props.initIngredients()
     }
 }
 
@@ -109,14 +109,16 @@ class BurgerBuilder extends React.Component {
 const mapStateToProps = state => {
     return {
         ingredients: state.ingredients,
-        totalPrice: state.totalPrice
+        totalPrice: state.totalPrice,
+        error: state.error
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIngredientAdded: (ingName) => { dispatch({type:actionTypes.addIngredient, name:ingName})},
-        onIngredientRemoved: (ingName) => { dispatch({type:actionTypes.removeIngredient, name:ingName})}
+        onIngredientAdded: (ingName) => { dispatch(actionTypes.addIngredient(ingName))},
+        onIngredientRemoved: (ingName) => { dispatch(actionTypes.removeIngredient(ingName))},
+        initIngredients: () => { console.log('[initIngredients]: called'); dispatch(actionTypes.initIngredients())}
     }
 }
 

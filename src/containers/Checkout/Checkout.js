@@ -7,8 +7,8 @@ import { Route } from 'react-router-dom';
 class Checkout extends React.Component {
     constructor(props) {
         super(props);
-        this.continueCheckoutHandler = this.continueCheckoutHandler.bind(this)
-        this.cancelCheckoutHandler = this.cancelCheckoutHandler.bind(this)
+        this.continueCheckoutHandler = this.continueCheckoutHandler.bind(this);
+        this.cancelCheckoutHandler = this.cancelCheckoutHandler.bind(this);
     }
 
     continueCheckoutHandler() {
@@ -37,7 +37,7 @@ class Checkout extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        ingredients: state.ingredients
+        ingredients: state.burgerBuilder.ingredients
     }
 }
 

@@ -1,18 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import reducer from './store/reducers/burgerBuilder';
+import burgerBuilderReducer from './store/reducers/burgerBuilder';
+import orderReducer from './store/reducers/order';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import thunk from 'redux-thunk';
-
-const preloadedState = {
-  ingredients: {},
-  totalPrice: 4, 
-  error:false
-}
 
 const logger = (storeAPI)=>(next)=>(action)=>{
   console.log('State from Middleware: ',storeAPI.getState());
@@ -21,10 +16,11 @@ const logger = (storeAPI)=>(next)=>(action)=>{
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const middlewareEnhancer = applyMiddleware(logger, thunk);
+const rootReducer = combineReducers({ burgerBuilder: burgerBuilderReducer, order:orderReducer});
 
 
 
-const store = createStore(reducer, preloadedState, composeEnhancers(middlewareEnhancer));
+const store = createStore(rootReducer, composeEnhancers(middlewareEnhancer));
 
 ReactDOM.render(
   <React.StrictMode>

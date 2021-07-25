@@ -1,9 +1,10 @@
 import classes from './ContactData.module.css';
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Button from '../../../components/UI/Button/Button'
-import axiosOrder from '../../../axios-orders';
+// import axiosOrder from '../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
+import * as actions from '../../../store/actions/order';
 
 
 class ContactData extends React.Component {
@@ -114,17 +115,9 @@ class ContactData extends React.Component {
             price: this.props.totalPrice
         }
 
+        this.props.submitOrder(order);
 
-        axiosOrder.post('/orders.json', order)
-            .then(response => {
-                console.log(response)
-                this.setState({ orderLoading: false });
-                this.props.history.push('/');
 
-            }).catch(error => {
-                console.log(error);
-                this.setState({ orderLoading: false });
-            });
     }
 
     checkFormValidity = () => {
@@ -159,10 +152,10 @@ class ContactData extends React.Component {
         let formValid = this.checkFormValidity();
 
         inputField.visited = true;
-        this.setState({ ...updatedOrderForm, formValid:formValid });
+        this.setState({ ...updatedOrderForm, formValid: formValid });
     }
 
-    
+
 
 
     render() {
@@ -194,12 +187,17 @@ class ContactData extends React.Component {
         )
     }
 }
-
-const mapStateToProps = state => {
-    return {
-        ingredients: state.ingredients,
-        totalPrice: state.totalPrice
-    }
-}
-
-export default connect(mapStateToProps)(ContactData);
+export default connect(
+    state => {
+        return {
+            burgerBuilder:{
+                ingredients: state.burgerBuilder.ingredients,
+                totalPrice: state.burgerBuilder.totalPrice
+            }
+        }
+    },
+    dispatch => {
+        return {
+            submitOrder: order => dispatch(actions.pushOrder(order))
+        }
+    })(ContactData);

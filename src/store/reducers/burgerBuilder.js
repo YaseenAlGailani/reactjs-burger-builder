@@ -1,6 +1,10 @@
 import * as actionTypes from '../actions/actionTypes';
 
-let initialState = {}
+let initialState = {
+    ingredients: {},
+    totalPrice: 4,
+    error: false
+}
 
 const INGREDIENT_PRICES = {
     cheese: 0.4,
@@ -16,8 +20,13 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 ingredients: {
-                    ...action.data
-                }
+                    salad:action.data.salad,
+                    cheese:action.data.cheese,
+                    mushroom:action.data.mushroom,
+                    meat: action.data.meat
+                },
+                error:false, 
+                totalPrice:4
             }
         case actionTypes.ADD_INGREDIENT:
             return {
@@ -38,6 +47,7 @@ const reducer = (state = initialState, action) => {
                 totalPrice: state.totalPrice - INGREDIENT_PRICES[action.name]
             };
         case actionTypes.FETCH_INGREDIENTS_FAILED:
+            console.error('[FETCH_INGREDIENTS_FAILED]', action.error)
             return {
                 ...state,
                 error:true

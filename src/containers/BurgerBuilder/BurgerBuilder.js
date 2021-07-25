@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import * as actionTypes from '../../store/actions'
+import * as actions from '../../store/actions'
 import Burger from '../../components/Burger/Burger'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
@@ -15,9 +15,9 @@ class BurgerBuilder extends React.Component {
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
-            purchasable: false, 
+            purchasable: false,
         }
     }
 
@@ -108,17 +108,17 @@ class BurgerBuilder extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        ingredients: state.ingredients,
-        totalPrice: state.totalPrice,
-        error: state.error
+        ingredients: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIngredientAdded: (ingName) => { dispatch(actionTypes.addIngredient(ingName))},
-        onIngredientRemoved: (ingName) => { dispatch(actionTypes.removeIngredient(ingName))},
-        initIngredients: () => { console.log('[initIngredients]: called'); dispatch(actionTypes.initIngredients())}
+        onIngredientAdded: (ingName) => { dispatch(actions.addIngredient(ingName)) },
+        onIngredientRemoved: (ingName) => { dispatch(actions.removeIngredient(ingName)) },
+        initIngredients: () => { console.log('[initIngredients]: called'); dispatch(actions.initIngredients()) }
     }
 }
 

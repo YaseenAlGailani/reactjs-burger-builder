@@ -2,11 +2,11 @@ import * as actionTypes from './actionTypes'
 import axiosOrder from '../../axios-orders';
 
 
-const pushOrderSuccess = (message, order) => {
+const pushOrderSuccess = (response, orderData) => {
     return {
         type:actionTypes.PUSH_ORDER_SUCCESS,
-        order: order,
-        successMessage: message
+        orderId:response.name,
+        orderData: orderData,
     }
 }
 
@@ -17,11 +17,18 @@ const pushOrderFail = (error) => {
     }
 }
 
-export const pushOrder = (order) => {
+const pushOrderStart = () => {
+    return {
+        type:actionTypes.PUSH_ORDER_START
+    }
+}
+
+export const pushOrder = (orderData) => {
     return dispatch => {
-        axiosOrder.post('/orders.json', order)
+        dispatch(pushOrderStart());
+        axiosOrder.post('/orders.json', orderData)
             .then(response => {
-                dispatch(pushOrderSuccess(response, order))
+                dispatch(pushOrderSuccess(response.data, orderData))
             }).catch(error => {
                 dispatch(pushOrderFail(error));
             });

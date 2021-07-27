@@ -2,27 +2,36 @@ import * as actionTypes from '../actions/actionTypes';
 
 
 const initState = {
-    order: [],
+    orders: [],
     loading: false
 };
 
 export default function reducer(state = initState, action) {
     switch (action.type) {
-        case actionTypes.PUSH_ORDER_SUCCESS:
-            console.log('[PUSH_ORDER_SUCCESS]: complete');
+        case actionTypes.PUSH_ORDER_START:
+            console.log('[PUSH_ORDER_START]: triggered')
             return {
                 ...state,
-                order: state.order.concat(action.order),
+                loading: true
+            }
+        case actionTypes.PUSH_ORDER_SUCCESS:
+            const newOrder = {
+                id: action.orderId,
+                ...action.orderData
+            }
+            return {
+                ...state,
+                orders: state.orders.concat(newOrder),
                 loading: false
             }
         case actionTypes.PUSH_ORDER_FAIL:
             console.error(action.error);
             return {
                 ...state,
-                loading:false
+                loading: false
             }
-            default: {
-                return state;
-            }
+        default: {
+            return state;
+        }
     }
 }

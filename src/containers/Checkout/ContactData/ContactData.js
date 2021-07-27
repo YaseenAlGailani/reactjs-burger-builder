@@ -2,9 +2,11 @@ import classes from './ContactData.module.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import Button from '../../../components/UI/Button/Button'
-// import axiosOrder from '../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
 import * as actions from '../../../store/actions/order';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import axios from 'axios';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 
 class ContactData extends React.Component {
@@ -94,14 +96,12 @@ class ContactData extends React.Component {
                     visited: false
                 }
             },
-            orderLoading: false,
             formValid: false
         }
 
     }
     submitOrderHandler(e) {
         e.preventDefault();
-        this.setState({ orderLoading: true });
 
         let orderData = {};
 
@@ -176,6 +176,10 @@ class ContactData extends React.Component {
             )
         }
 
+        if(this.props.order.loading){
+            formFields = <Spinner /> ;
+        }
+
         return (
             <div className={classes.ContactData}>
                 <h1>Your Contact info</h1>
@@ -193,11 +197,16 @@ export default connect(
             burgerBuilder:{
                 ingredients: state.burgerBuilder.ingredients,
                 totalPrice: state.burgerBuilder.totalPrice
+            },
+            order:{
+                loading: state.order.loading
             }
         }
     },
     dispatch => {
         return {
-            submitOrder: order => dispatch(actions.pushOrder(order))
+            submitOrder: orderData => {
+                dispatch(actions.pushOrder(orderData ));
+            }
         }
-    })(ContactData);
+    })(withErrorHandler(ContactData,axios));

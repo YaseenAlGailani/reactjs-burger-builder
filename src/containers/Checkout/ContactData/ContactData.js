@@ -110,9 +110,9 @@ class ContactData extends React.Component {
         }
 
         let order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.burgerBuilder.ingredients,
             orderData: orderData,
-            price: this.props.totalPrice
+            price: this.props.burgerBuilder.totalPrice
         }
 
         this.props.submitOrder(order);

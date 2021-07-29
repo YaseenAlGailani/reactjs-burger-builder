@@ -6,3 +6,4 @@ export const PUSH_ORDER = 'PUSH_ORDER';
 export const PUSH_ORDER_START = 'PUSH_ORDER_START';
 export const PUSH_ORDER_SUCCESS = 'PUSH_ORDER_SUCCESS';
 export const PUSH_ORDER_FAIL = 'PUSH_ORDER_FAIL';
+export const PURCHASE_INIT = 'PURCHASE_INIT';

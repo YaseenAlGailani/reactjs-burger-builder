@@ -23,6 +23,12 @@ const pushOrderStart = () => {
     }
 }
 
+export const purchaseInit = () => {
+    return {
+        type:actionTypes.PURCHASE_INIT
+    }
+}
+
 export const pushOrder = (orderData) => {
     return dispatch => {
         dispatch(pushOrderStart());

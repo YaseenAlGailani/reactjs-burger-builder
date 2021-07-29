@@ -20,9 +20,10 @@ class Checkout extends React.Component {
     }
 
     render() {
-
-        const checkoutSummary = this.props.ingredients.length ?
+        const purchaseComplete = this.props.purchaseComplete ? <Redirect to="/" /> : null ;
+        const checkoutSummary = Object.keys(this.props.ingredients).length ?
             <div>
+                {purchaseComplete}
                 <CheckoutSummary
                     ingredients={this.props.ingredients}
                     continueCheckout={this.continueCheckoutHandler}
@@ -32,14 +33,15 @@ class Checkout extends React.Component {
             </div> :
             <Redirect to="/" />;
 
-        return checkoutSummary
+        return checkoutSummary;
     }
 }
 
 
 const mapStateToProps = state => {
     return {
-        ingredients: state.burgerBuilder.ingredients
+        ingredients: state.burgerBuilder.ingredients,
+        purchaseComplete: state.order.purchaseComplete
     }
 }
 

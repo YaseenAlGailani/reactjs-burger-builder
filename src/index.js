@@ -4,10 +4,10 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import thunk from 'redux-thunk';
+import './index.css';
 
 const logger = (storeAPI)=>(next)=>(action)=>{
   console.log('State from Middleware: ',storeAPI.getState());

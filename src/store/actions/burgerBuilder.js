@@ -1,6 +1,14 @@
 import * as actionTypes from './actionTypes';
 import axiosOrder from '../../axios-orders';
 
+
+const setIngredients = data => {
+    return {
+        type: actionTypes.SET_INGREDIENTS,
+        data: data
+    }
+}
+
 export const addIngredient = (name) => {
     return {
         type: actionTypes.ADD_INGREDIENT,
@@ -22,12 +30,6 @@ export const fetchIngredientsFailed = (error) => {
     }
 }
 
-const setIngredients = data => {
-    return {
-        type: actionTypes.SET_INGREDIENTS,
-        data:data
-    }
-}
 
 export const initIngredients = () => {
     return dispatch => {

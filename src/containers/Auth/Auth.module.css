@@ -1,0 +1,16 @@
+.Auth {
+    margin: 20px auto;
+    width: 80%;
+    text-align: center;
+}
+
+.Auth input {
+    display: block;
+    width: 100%;
+}
+
+@media (min-width:600px) {
+    .Auth {
+        max-width: 500px;
+    }
+}

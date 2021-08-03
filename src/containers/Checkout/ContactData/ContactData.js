@@ -2,7 +2,7 @@ import classes from './ContactData.module.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import Button from '../../../components/UI/Button/Button'
-import Input from '../../../components/UI/Input/Input';
+import FormControl from '../../../components/UI/Input/FormControl';
 import * as actions from '../../../store/actions/order';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import axios from 'axios';
@@ -161,18 +161,18 @@ class ContactData extends React.Component {
     render() {
 
         let formFields = [];
-        for (let input in this.state.orderForm) {
+        for (let formControl in this.state.orderForm) {
             formFields.push(
-                <Input
-                    id={input}
-                    key={this.state.orderForm[input].label}
-                    type={this.state.orderForm[input].elementType}
-                    label={this.state.orderForm[input].label}
-                    config={this.state.orderForm[input].elementConfig}
-                    value={this.state.orderForm[input].value}
-                    changed={event => this.inputChangeHandler(event, input)}
-                    valid={this.state.orderForm[input].isValid}
-                    visited={this.state.orderForm[input].visited} />
+                <FormControl
+                    id={formControl}
+                    key={this.state.orderForm[formControl].label}
+                    elementType={this.state.orderForm[formControl].elementType}
+                    label={this.state.orderForm[formControl].label}
+                    config={this.state.orderForm[formControl].elementConfig}
+                    value={this.state.orderForm[formControl].value}
+                    changed={event => this.inputChangeHandler(event, formControl)}
+                    valid={this.state.orderForm[formControl].isValid}
+                    visited={this.state.orderForm[formControl].visited} />
             )
         }
 

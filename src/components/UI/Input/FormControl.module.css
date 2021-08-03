@@ -10,7 +10,7 @@
     margin-bottom:8px;
 }
 
-.InputElement {
+.formControl {
     outline:none;
     border: solid 1px #ccc;
     background-color:white;
@@ -20,7 +20,7 @@
     width:100%;
 }
 
-.InputElement:focus{
+.formControl:focus{
     outline:none;
     background-color:#eee;
 }

@@ -6,6 +6,7 @@
 .pnp.js
 /Burger App Components Diagram.mindnode
 Burger builder Diagram.png
+src/apiKeys.js
 
 # testing
 /coverage

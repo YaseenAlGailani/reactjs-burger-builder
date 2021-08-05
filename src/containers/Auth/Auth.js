@@ -1,6 +1,7 @@
 import React from 'react';
 import classes from './Auth.module.css';
-
+import * as actions from '../../store/actions/index';
+import {connect} from 'react-redux';
 import FormControl from '../../components/UI/Input/FormControl';
 import Button from '../../components/UI/Button/Button';
 
@@ -39,7 +40,8 @@ class Auth extends React.Component {
                     isValid: false,
                     visited: false
                 }
-            }
+            },
+            signUpMode: true
         }
     }
 
@@ -89,6 +91,18 @@ class Auth extends React.Component {
         });
     }
 
+    onSubmitHandler = (event) => {
+        event.preventDefault();
+        this.props.authenticate(this.state.controls.email.value, this.state.controls.password.value)
+    }
+
+    switchAuthModeHandler = (event) => {
+        this.setState((prevState) => {
+            return {
+                signUpMode: !prevState.signUpMode
+            };
+        });
+    }
 
     render() {
         let formFields = [];
@@ -110,14 +124,23 @@ class Auth extends React.Component {
         return (
             <div className={classes.Auth}>
                 <h1>Log in</h1>
-                <form>
+                <form onSubmit={this.onSubmitHandler}>
                     {formFields}
-                    <Button btnType="Success">Log in</Button>
+                    <Button btnType="Success">Sign in</Button>
                 </form>
+                    <Button clicked={this.switchAuthModeHandler} btnType="Danger">Switch to {this.state.signUpMode ? 'Sign in' : 'Sign up'}</Button>
             </div>
         )
     }
 }
 
 
-export default Auth;
+
+
+export default connect(null, 
+    dispatch => {
+        return {
+            authenticate: (email, password) => dispatch(actions.auth(email,password))
+        }
+    }
+    )(Auth);

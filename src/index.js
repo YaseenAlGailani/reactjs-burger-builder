@@ -4,6 +4,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
+import authReducer from './store/reducers/auth';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import thunk from 'redux-thunk';
@@ -16,7 +17,7 @@ const logger = (storeAPI)=>(next)=>(action)=>{
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const middlewareEnhancer = applyMiddleware(logger, thunk);
-const rootReducer = combineReducers({ burgerBuilder: burgerBuilderReducer, order:orderReducer});
+const rootReducer = combineReducers({ burgerBuilder: burgerBuilderReducer, order: orderReducer, auth: authReducer});
 
 
 

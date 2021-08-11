@@ -93,7 +93,7 @@ class Auth extends React.Component {
 
     onSubmitHandler = (event) => {
         event.preventDefault();
-        this.props.authenticate(this.state.controls.email.value, this.state.controls.password.value)
+        this.props.authenticate(this.state.signUpMode,this.state.controls.email.value, this.state.controls.password.value)
     }
 
     switchAuthModeHandler = (event) => {
@@ -126,7 +126,7 @@ class Auth extends React.Component {
                 <h1>Log in</h1>
                 <form onSubmit={this.onSubmitHandler}>
                     {formFields}
-                    <Button btnType="Success">Sign in</Button>
+                    <Button btnType="Success">Sign {this.state.signUpMode ? 'up' : 'in'}</Button>
                 </form>
                     <Button clicked={this.switchAuthModeHandler} btnType="Danger">Switch to {this.state.signUpMode ? 'Sign in' : 'Sign up'}</Button>
             </div>
@@ -140,7 +140,7 @@ class Auth extends React.Component {
 export default connect(null, 
     dispatch => {
         return {
-            authenticate: (email, password) => dispatch(actions.auth(email,password))
+            authenticate: (isSignup, email, password) => dispatch(actions.auth(isSignup, email,password))
         }
     }
     )(Auth);

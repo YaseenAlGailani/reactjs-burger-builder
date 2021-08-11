@@ -1,6 +1,5 @@
 import classes from './NavigationItems.module.css';
 import NavigationItem from './NavigationItem/NavigationItem';
-import Auth from '../../../containers/Auth/Auth';
 
 
 const NavigationItems = () =>  (

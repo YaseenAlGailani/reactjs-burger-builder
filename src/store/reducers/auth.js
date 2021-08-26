@@ -19,7 +19,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 loading: false,
-                idToken: action.idToken,
+                token: action.idToken,
                 userId: action.userId
             }
         case actionTypes.AUTH_FAIL:
@@ -28,6 +28,13 @@ export default function reducer(state = initialState, action) {
                 loading: false,
                 error: action.error
             }
+        case actionTypes.AUTH_LOGOUT:
+            return {
+                ...state,
+                token: null,
+                userId: null
+            }
+
         default:
             return {
                 ...state

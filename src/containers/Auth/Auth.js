@@ -1,9 +1,11 @@
 import React from 'react';
 import classes from './Auth.module.css';
 import * as actions from '../../store/actions/index';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import FormControl from '../../components/UI/Input/FormControl';
 import Button from '../../components/UI/Button/Button';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import { Redirect } from 'react-router-dom';
 
 
 
@@ -21,7 +23,7 @@ class Auth extends React.Component {
                     value: '',
                     validation: {
                         required: true,
-                        isEmail:true
+                        isEmail: true
                     },
                     isValid: false,
                     visited: false
@@ -35,13 +37,13 @@ class Auth extends React.Component {
                     value: '',
                     validation: {
                         required: true,
-                        minLength:6
+                        minLength: 6
                     },
                     isValid: false,
                     visited: false
                 }
             },
-            signUpMode: true
+            signUpMode: false
         }
     }
 
@@ -79,21 +81,22 @@ class Auth extends React.Component {
 
     inputChangeHandler = (event, controlName) => {
         let updatedControls = {
-            ...this.state.controls, 
-            [controlName]: {...this.state.controls[controlName],
-            isValid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
-            value: event.target.value,
-            visited: true        
+            ...this.state.controls,
+            [controlName]: {
+                ...this.state.controls[controlName],
+                isValid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+                value: event.target.value,
+                visited: true
+            }
         }
-    }
         this.setState({
-            controls:updatedControls
+            controls: updatedControls
         });
     }
 
     onSubmitHandler = (event) => {
         event.preventDefault();
-        this.props.authenticate(this.state.signUpMode,this.state.controls.email.value, this.state.controls.password.value)
+        this.props.authenticate(this.state.signUpMode, this.state.controls.email.value, this.state.controls.password.value)
     }
 
     switchAuthModeHandler = (event) => {
@@ -121,14 +124,21 @@ class Auth extends React.Component {
             )
         }
 
+        if (this.props.loading) {
+            formFields = <Spinner />;
+        }
+
+        let errorMessage = this.props.error ? <p>{this.props.error.message}</p> : null;
+
         return (
             <div className={classes.Auth}>
-                <h1>Log in</h1>
+                {this.props.isAuthenticated ? <Redirect to="/" /> : null}
+                {errorMessage}
                 <form onSubmit={this.onSubmitHandler}>
                     {formFields}
                     <Button btnType="Success">Sign {this.state.signUpMode ? 'up' : 'in'}</Button>
                 </form>
-                    <Button clicked={this.switchAuthModeHandler} btnType="Danger">Switch to {this.state.signUpMode ? 'Sign in' : 'Sign up'}</Button>
+                <Button clicked={this.switchAuthModeHandler} btnType="Danger">Switch to {this.state.signUpMode ? 'Sign in' : 'Sign up'}</Button>
             </div>
         )
     }
@@ -137,10 +147,17 @@ class Auth extends React.Component {
 
 
 
-export default connect(null, 
+export default connect(
+    state => {
+        return {
+            loading: state.auth.loading,
+            error: state.auth.error,
+            isAuthenticated: state.auth.token !== null
+        }
+    },
     dispatch => {
         return {
-            authenticate: (isSignup, email, password) => dispatch(actions.auth(isSignup, email,password))
+            authenticate: (isSignup, email, password) => dispatch(actions.auth(isSignup, email, password))
         }
     }
-    )(Auth);
+)(Auth);

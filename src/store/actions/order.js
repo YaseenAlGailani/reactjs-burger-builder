@@ -31,10 +31,10 @@ const pushOrderFail = (error) => {
 
 
 
-export const pushOrder = (orderData) => {
+export const pushOrder = (orderData, token) => {
     return dispatch => {
         dispatch(pushOrderStart());
-        axiosOrder.post('/orders.json', orderData)
+        axiosOrder.post('/orders.json?auth=' + token, orderData)
             .then(response => {
                 dispatch(pushOrderSuccess(response.data, orderData))
             }).catch(error => {
@@ -62,10 +62,10 @@ const fetchOrderFail = (error) => {
     }
 }
 
-export const fetchOrders = () => {
+export const fetchOrders = (token) => {
     return dispatch => {
         dispatch(fetchOrderStart());
-        axiosOrder.get('/orders.json')
+        axiosOrder.get('/orders.json?auth=' + token)
             .then((resp) => {
                 console.log('[FETCH_ORDERS]', resp.data)
                 let fetchedOrders = []

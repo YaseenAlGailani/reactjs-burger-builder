@@ -15,7 +15,7 @@ const BuildControls = (props) => {
             {controls.map(ctrl => {
                 return (
                     <BuildControl
-                        disabled={props.ingredientsBool[ctrl.type]}
+                        disabled={props.disabled[ctrl.type]}
                         less={() => props.removeIngredient(ctrl.type)}
                         more={() => props.addIngredient(ctrl.type)}
                         key={ctrl.label}
@@ -24,7 +24,7 @@ const BuildControls = (props) => {
                 );
             })}
 
-            <button onClick={props.showModal} disabled={props.price <= 4}className={classes.OrderButton}>Order Now</button>
+            <button onClick={props.order} disabled={props.price <= 4}className={classes.OrderButton}>Order Now</button>
         </div>
     );
 }

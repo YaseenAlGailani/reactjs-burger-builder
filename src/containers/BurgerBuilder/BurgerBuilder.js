@@ -22,12 +22,6 @@ class BurgerBuilder extends React.Component {
     }
 
     updatePurchasability() {
-        // [{mushroom:0},{cheese:1},{salad:0},{meat:1}]
-        // let ingredients = { ...state.ingrdients };
-        // const sum = Object.entries(ingredients).reduce((acc, current) => {
-        //     return acc + current[1]
-        // }, 0)
-        // this.setState({purchasable:sum > 0})
 
         this.setState((state) => {
             let ingredients = { ...this.props.ingrdients };
@@ -38,15 +32,18 @@ class BurgerBuilder extends React.Component {
         })
     }
 
-    showOrderSummary = () => {
+    purchaseHandler = () => {
+        if (!this.props.isAuthenticated){
+            this.props.history.push('/auth');
+        }
         this.setState({ viewOrderSummary: true })
     }
 
-    hideOrderSummary = () => {
+    purchaseCancelHandler = () => {
         this.setState({ viewOrderSummary: false })
     }
 
-    continuePurchase = () => {
+    continuePurchaseHandler = () => {
         this.props.history.push('/checkout');
         this.props.initPurchase();
     }
@@ -60,8 +57,8 @@ class BurgerBuilder extends React.Component {
 
         let modalContent = this.props.ingredients ? (<OrderSummary
             price={this.props.totalPrice}
-            cancelPurchase={this.hideOrderSummary}
-            continuePurchase={this.continuePurchase}
+            cancelPurchase={this.purchaseCancelHandler}
+            continuePurchase={this.continuePurchaseHandler}
             ingredients={this.props.ingredients} />) : <Spinner />;
 
 
@@ -73,9 +70,9 @@ class BurgerBuilder extends React.Component {
             <>
                 <Burger ingredients={this.props.ingredients} />
                 <BuildControls
-                    showModal={this.showOrderSummary}
+                    order={this.purchaseHandler}
                     price={this.props.totalPrice}
-                    ingredientsBool={ingredientsRemovedBool}
+                    disabled={ingredientsRemovedBool}
                     removeIngredient={this.props.onIngredientRemoved}
                     addIngredient={this.props.onIngredientAdded}
                 />
@@ -86,7 +83,7 @@ class BurgerBuilder extends React.Component {
         return (
             <>
                 {this.props.error ? <p>Error loading ingredients</p> : burger}
-                <Modal modalShown={this.state.viewOrderSummary} hideModal={this.hideOrderSummary} >
+                <Modal modalShown={this.state.viewOrderSummary} hideModal={this.purchaseCancelHandler} >
                     {modalContent}
                 </Modal>
             </>
@@ -94,13 +91,6 @@ class BurgerBuilder extends React.Component {
     }
 
     componentDidMount() {
-        // axiosOrder.get('/ingredients.json')
-        //     .then((resp) => {
-        //         this.setState({ ingredients: resp.data });
-        //     }).catch((error) => {
-        //         this.setState({ error: true });
-        //         console.log(error);
-        //     })
         this.props.initIngredients()
     }
 }
@@ -111,7 +101,8 @@ const mapStateToProps = state => {
     return {
         ingredients: state.burgerBuilder.ingredients,
         totalPrice: state.burgerBuilder.totalPrice,
-        error: state.burgerBuilder.error
+        error: state.burgerBuilder.error,
+        isAuthenticated: state.auth.token !== null
     }
 }
 

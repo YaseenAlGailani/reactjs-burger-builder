@@ -110,12 +110,12 @@ class ContactData extends React.Component {
         }
 
         let order = {
-            ingredients: this.props.burgerBuilder.ingredients,
+            ingredients: this.props.ingredients,
             orderData: orderData,
-            price: this.props.burgerBuilder.totalPrice
+            price: this.props.totalPrice
         }
 
-        this.props.submitOrder(order);
+        this.props.submitOrder(order, this.props.token);
 
 
     }
@@ -176,8 +176,8 @@ class ContactData extends React.Component {
             )
         }
 
-        if(this.props.order.loading){
-            formFields = <Spinner /> ;
+        if (this.props.loading) {
+            formFields = <Spinner />;
         }
 
         return (
@@ -194,19 +194,14 @@ class ContactData extends React.Component {
 export default connect(
     state => {
         return {
-            burgerBuilder:{
-                ingredients: state.burgerBuilder.ingredients,
-                totalPrice: state.burgerBuilder.totalPrice
-            },
-            order:{
-                loading: state.order.loading
-            }
+            ingredients: state.burgerBuilder.ingredients,
+            totalPrice: state.burgerBuilder.totalPrice,
+            loading: state.order.loading,
+            token:state.auth.token
         }
     },
     dispatch => {
         return {
-            submitOrder: orderData => {
-                dispatch(actions.pushOrder(orderData ));
-            }
+            submitOrder: (orderData, token) => { dispatch(actions.pushOrder(orderData, token));}
         }
-    })(withErrorHandler(ContactData,axios));
+    })(withErrorHandler(ContactData, axios));

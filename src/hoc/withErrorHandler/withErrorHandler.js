@@ -14,6 +14,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
 
         const requestInterceptor = axios.interceptors.request.use(req => req, (error) => {
             setShowModal(true);
+            console.log('[INTERCEPTOR]: ',error);
             setErrorMessage(error.message);
             return Promise.reject(error);
         })
@@ -28,7 +29,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
             return () => {
                 console.log('unmounting Interceptors:', requestInterceptor, responseInterceptor)
                 axios.interceptors.request.eject(requestInterceptor)
-                axios.interceptors.request.eject(responseInterceptor)
+                axios.interceptors.response.eject(responseInterceptor)
             }
         }
         );

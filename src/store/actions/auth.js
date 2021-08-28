@@ -24,20 +24,31 @@ const authFail = (error) => {
     }
 }
 
-export const logout = () => {
-    return {
-        type: actionTypes.AUTH_LOGOUT
-    }
-}
-
 const authTimeout = (expirationTime) => {
     return dispatch => {
-        setTimeout(() =>{
+        console.log('[EXPIREY]', expirationTime)
+        setTimeout(() => {
+            console.log('[SESSION TIMEOUT]')
             dispatch(logout())
         }, expirationTime * 1000)
     }
 }
 
+export const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('expireyDate');
+    return {
+        type: actionTypes.AUTH_LOGOUT
+    }
+}
+
+export const setAuthRedirectPath = (path) => {
+    return {
+        type: actionTypes.SET_AUTH_REDIRECT_PATH,
+        path: path
+    }
+}
 
 export const auth = (isSignup, email, password) => {
     console.log('[Credentialls]: ', email, password);
@@ -52,6 +63,11 @@ export const auth = (isSignup, email, password) => {
         dispatch(authStart());
         axios.post(url, data)
             .then(response => {
+                const expireyDate = new Date(new Date().getTime() + response.data.expiresIn * 1000)
+                localStorage.setItem('token', response.data.idToken);
+                localStorage.setItem('userId', response.data.localId);
+                localStorage.setItem('expireyDate', expireyDate);
+
                 console.log(response)
                 dispatch(authSuccess(response.data.localId, response.data.idToken));
                 dispatch(authTimeout(response.data.expiresIn));
@@ -61,3 +77,21 @@ export const auth = (isSignup, email, password) => {
     }
 }
 
+export const autoAuthenticate = () => {
+    
+    const expireyDate = new Date(localStorage.getItem('expireyDate'));
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
+    console.log('[APP]: ', expireyDate > new Date())
+ 
+    return dispatch => {
+        if (expireyDate > new Date()) {
+            console.log('{TESTING}',expireyDate.getTime());
+            dispatch(authSuccess(userId, token));
+            dispatch(authTimeout((expireyDate.getTime() - new Date().getTime()) / 1000));
+        } else {
+            dispatch(logout());
+        }
+    }
+}

@@ -12,6 +12,11 @@ import { Redirect } from 'react-router-dom';
 class Auth extends React.Component {
     constructor(props) {
         super(props);
+
+        if(!this.props.buildingBurger){
+            this.props.resetAuthRedirectPath();
+        }
+
         this.state = {
             controls: {
                 email: {
@@ -129,10 +134,10 @@ class Auth extends React.Component {
         }
 
         let errorMessage = this.props.error ? <p>{this.props.error.message}</p> : null;
-
+        
         return (
             <div className={classes.Auth}>
-                {this.props.isAuthenticated ? <Redirect to="/" /> : null}
+                {this.props.isAuthenticated ? <Redirect to={this.props.authRedirectPath} /> : null}
                 {errorMessage}
                 <form onSubmit={this.onSubmitHandler}>
                     {formFields}
@@ -152,12 +157,15 @@ export default connect(
         return {
             loading: state.auth.loading,
             error: state.auth.error,
-            isAuthenticated: state.auth.token !== null
+            isAuthenticated: state.auth.token !== null, 
+            buildingBurger: state.burgerBuilder.building,
+            authRedirectPath: state.auth.authRedirectPath
         }
     },
     dispatch => {
         return {
-            authenticate: (isSignup, email, password) => dispatch(actions.auth(isSignup, email, password))
+            authenticate: (isSignup, email, password) => dispatch(actions.auth(isSignup, email, password)),
+            resetAuthRedirectPath: () => {dispatch(actions.setAuthRedirectPath('/'))}
         }
     }
 )(Auth);

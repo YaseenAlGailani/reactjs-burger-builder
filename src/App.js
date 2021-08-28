@@ -1,5 +1,7 @@
-import React from 'react';
-import { Route, Switch, BrowserRouter} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from './store/actions/index'
 import Layout from './components/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
 import Checkout from './containers/Checkout/Checkout';
@@ -8,21 +10,52 @@ import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 
 
-function App() {
+function App(props) { 
+  useEffect(()=> {
+    props.autoAuthenticate();
+  });
+
+  let routes = (
+    <Switch>
+      <Route path='/auth' component={Auth} />
+      <Route path='/' exact component={BurgerBuilder} />
+      <Redirect to="/" />
+    </Switch>
+  )
+
+  if(props.isAuthenticated){
+    routes = (
+      <Switch>
+        <Route path='/checkout' component={Checkout} />
+        <Route path='/orders' component={Orders} />
+        <Route path='/logout' component={Logout} />
+        <Route path='/' exact component={BurgerBuilder} />
+        <Redirect to="/" />
+      </Switch>
+    )
+  }
 
   return (
     <BrowserRouter>
       <Layout>
-        <Switch>
-          <Route path='/checkout' component={Checkout} />
-          <Route path='/orders' component={Orders} />
-          <Route path='/auth' component={Auth} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' exact component={BurgerBuilder} />
-        </Switch>
+       {routes}
       </Layout>
     </BrowserRouter>
   );
 }
 
-export default App;
+export default connect(
+  state => {
+    return {
+      isAuthenticated: state.auth.token !== null
+    }
+  },
+  dispatch => {
+    return {
+      autoAuthenticate: () => {
+        dispatch(actions.autoAuthenticate())
+
+      }
+    }
+  }
+)(App);

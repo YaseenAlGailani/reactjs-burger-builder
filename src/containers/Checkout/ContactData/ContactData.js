@@ -112,12 +112,10 @@ class ContactData extends React.Component {
         let order = {
             ingredients: this.props.ingredients,
             orderData: orderData,
-            price: this.props.totalPrice
+            price: this.props.totalPrice,
+            userId: this.props.userId
         }
-
         this.props.submitOrder(order, this.props.token);
-
-
     }
 
     checkFormValidity = () => {
@@ -154,9 +152,6 @@ class ContactData extends React.Component {
         inputField.visited = true;
         this.setState({ ...updatedOrderForm, formValid: formValid });
     }
-
-
-
 
     render() {
 
@@ -197,11 +192,11 @@ export default connect(
             ingredients: state.burgerBuilder.ingredients,
             totalPrice: state.burgerBuilder.totalPrice,
             loading: state.order.loading,
-            token:state.auth.token
+            token: state.auth.token
         }
     },
     dispatch => {
         return {
-            submitOrder: (orderData, token) => { dispatch(actions.pushOrder(orderData, token));}
+            submitOrder: (orderData, token) => { dispatch(actions.pushOrder(orderData, token)); }
         }
     })(withErrorHandler(ContactData, axios));

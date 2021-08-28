@@ -11,7 +11,7 @@ import thunk from 'redux-thunk';
 import './index.css';
 
 const logger = (storeAPI)=>(next)=>(action)=>{
-  console.log('State from Middleware: ',storeAPI.getState());
+  // console.log('State from Middleware: ',storeAPI.getState());
   return next(action)
 }
 

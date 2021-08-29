@@ -7,13 +7,14 @@ import * as actions from '../../../store/actions/order';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import axios from 'axios';
 import Spinner from '../../../components/UI/Spinner/Spinner';
+import { checkValidity } from '../../../utility/validation';
 
 
 class ContactData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            orderForm: {
+            formControls: {
                 name: {
                     label: 'Your Name',
                     elementType: 'input',
@@ -36,7 +37,8 @@ class ContactData extends React.Component {
                     },
                     value: '',
                     validation: {
-                        required: true
+                        required: true, 
+                        isEmail:true
                     },
                     isValid: false,
                     visited: false
@@ -105,8 +107,8 @@ class ContactData extends React.Component {
 
         let orderData = {};
 
-        for (let key in this.state.orderForm) {
-            orderData[key] = this.state.orderForm[key].value;
+        for (let key in this.state.formControls) {
+            orderData[key] = this.state.formControls[key].value;
         }
 
         let order = {
@@ -118,56 +120,48 @@ class ContactData extends React.Component {
         this.props.submitOrder(order, this.props.token);
     }
 
-    checkFormValidity = () => {
+    checkFormValidity = (updatedControls) => {
         let formValid = true;
-        for (let key in this.state.orderForm) {
-            formValid &= this.state.orderForm[key].isValid;
+        for (let control in updatedControls) {
+            formValid = formValid && updatedControls[control].isValid;
         }
         return formValid;
     }
 
-    inputChangeHandler = (event, id) => {
-        let updatedOrderForm = {
-            ...this.state.orderForm
-        }
-        let inputField = updatedOrderForm[id]
-        let isValid = true;
-
-        inputField.value = event.target.value;
-
-        if (inputField.validation.required) {
-            isValid &= inputField.value.trim() !== ''
+    inputChangeHandler = (event, controlName) => {
+        let updatedControls= {
+            ...this.state.formControls,
+            [controlName]: {
+                ...this.state.formControls[controlName],
+                isValid: checkValidity(event.target.value, this.state.formControls[controlName].validation),
+                value: event.target.value,
+                visited:true
+            }
         }
 
-        if (inputField.validation.minLength) {
-            isValid &= inputField.value.length >= inputField.validation.minLength;
-        }
-        if (inputField.validation.maxLength) {
-            isValid &= inputField.value.length <= inputField.validation.maxLength;
-        }
-        inputField.isValid = isValid;
+        let formValid = this.checkFormValidity(updatedControls);
 
-        let formValid = this.checkFormValidity();
-
-        inputField.visited = true;
-        this.setState({ ...updatedOrderForm, formValid: formValid });
+        this.setState({ 
+            formControls: updatedControls,
+            formValid: formValid
+        });
     }
 
     render() {
 
         let formFields = [];
-        for (let formControl in this.state.orderForm) {
+        for (let formControl in this.state.formControls) {
             formFields.push(
                 <FormControl
                     id={formControl}
-                    key={this.state.orderForm[formControl].label}
-                    elementType={this.state.orderForm[formControl].elementType}
-                    label={this.state.orderForm[formControl].label}
-                    config={this.state.orderForm[formControl].elementConfig}
-                    value={this.state.orderForm[formControl].value}
+                    key={this.state.formControls[formControl].label}
+                    elementType={this.state.formControls[formControl].elementType}
+                    label={this.state.formControls[formControl].label}
+                    config={this.state.formControls[formControl].elementConfig}
+                    value={this.state.formControls[formControl].value}
                     changed={event => this.inputChangeHandler(event, formControl)}
-                    valid={this.state.orderForm[formControl].isValid}
-                    visited={this.state.orderForm[formControl].visited} />
+                    valid={this.state.formControls[formControl].isValid}
+                    visited={this.state.formControls[formControl].visited} />
             )
         }
 

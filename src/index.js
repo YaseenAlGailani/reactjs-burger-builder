@@ -15,7 +15,7 @@ const logger = (storeAPI)=>(next)=>(action)=>{
   return next(action)
 }
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = process.env.NODE_ENV === 'development' ?  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 const middlewareEnhancer = applyMiddleware(logger, thunk);
 const rootReducer = combineReducers({ burgerBuilder: burgerBuilderReducer, order: orderReducer, auth: authReducer});
 

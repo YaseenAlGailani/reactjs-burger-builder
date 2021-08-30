@@ -4,31 +4,28 @@ import { connect } from 'react-redux';
 import * as actions from './store/actions/index'
 import Layout from './components/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import Checkout from './containers/Checkout/Checkout';
-import Orders from './containers/Orders/Orders';
-import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
+import loadAsyncComponent from './hoc/loadAsyncComponent/loadAsyncComponent';
 
-
-function App(props) { 
-  useEffect(()=> {
+function App(props) {
+  useEffect(() => {
     props.autoAuthenticate();
   });
 
   let routes = (
     <Switch>
-      <Route path='/auth' component={Auth} />
+      <Route path='/auth' component={loadAsyncComponent(() => import('./containers/Auth/Auth'))} />
       <Route path='/' exact component={BurgerBuilder} />
       <Redirect to="/" />
     </Switch>
   )
 
-  if(props.isAuthenticated){
+  if (props.isAuthenticated) {
     routes = (
       <Switch>
-        <Route path='/checkout' component={Checkout} />
-        <Route path='/orders' component={Orders} />
-        <Route path='/auth' component={Auth} />
+        <Route path='/checkout' component={loadAsyncComponent(() => import('./containers/Checkout/Checkout'))} />
+        <Route path='/orders' component={loadAsyncComponent(() => import('./containers/Orders/Orders'))} />
+        <Route path='/auth' component={loadAsyncComponent(() => import('./containers/Auth/Auth'))} />
         <Route path='/logout' component={Logout} />
         <Route path='/' exact component={BurgerBuilder} />
         <Redirect to="/" />
@@ -39,7 +36,7 @@ function App(props) {
   return (
     <BrowserRouter>
       <Layout>
-       {routes}
+        {routes}
       </Layout>
     </BrowserRouter>
   );

@@ -11,7 +11,7 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler'
 
 
 
-class BurgerBuilder extends React.Component {
+export class BurgerBuilder extends React.Component {
 
     constructor(props) {
         super(props);
@@ -86,7 +86,7 @@ class BurgerBuilder extends React.Component {
             <>
                 {this.props.error ? <p>Error loading ingredients</p> : burger}
                 <Modal modalShown={this.state.viewOrderSummary} hideModal={this.purchaseCancelHandler} >
-                    {modalContent}
+                    {this.props.isAuthenticated ? modalContent : null}
                 </Modal>
             </>
         );

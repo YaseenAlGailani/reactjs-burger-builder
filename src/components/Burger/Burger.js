@@ -3,7 +3,7 @@ import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
 const Burger = (props) => {
     
-    let burgerContent = <p>Please Start adding ingredients</p>
+    let burgerContent = <p>Please start adding ingredients</p>
 
     if (props.ingredients !== null && Object.keys(props.ingredients).length) {
         let ingredients = Object.entries(props.ingredients).map(([ingredient, amount]) => {
